@@ -20,7 +20,7 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #ff9a9e, #fecfef, #ffd6e7);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       position: relative;
     }
@@ -34,37 +34,35 @@
     }
 
     @keyframes float {
-      0%, 100% {
+      0%,100% {
         transform: translateY(0) rotate(0deg);
-        opacity: 0.4;
+        opacity: .4;
       }
-
       50% {
         transform: translateY(-30px) rotate(10deg);
-        opacity: 0.8;
+        opacity: .8;
       }
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255,255,255,.9);
       backdrop-filter: blur(14px);
       border-radius: 28px;
       padding: 38px 28px;
       max-width: 450px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+      box-shadow: 0 20px 60px rgba(255,105,180,.3);
       position: relative;
       z-index: 10;
-      animation: appear 0.8s ease;
+      animation: appear .7s ease;
     }
 
     @keyframes appear {
       from {
         opacity: 0;
-        transform: scale(0.85);
+        transform: scale(.85);
       }
-
       to {
         opacity: 1;
         transform: scale(1);
@@ -78,13 +76,8 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.12);
-      }
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
     }
 
     h1 {
@@ -115,24 +108,28 @@
 
     button {
       border: none;
-      padding: 14px 25px;
+      padding: 14px 22px;
       font-size: 17px;
       font-weight: 600;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      width: 85%;
-      max-width: 300px;
+      transition: .25s;
+      width: 88%;
+      max-width: 310px;
     }
 
     button:hover {
       transform: translateY(-3px) scale(1.03);
     }
 
+    button:disabled {
+      opacity: .7;
+    }
+
     #yesBtn {
-      background: linear-gradient(135deg, #ff4f91, #ff7b54);
+      background: linear-gradient(135deg,#ff4f91,#ff7b54);
       color: white;
-      box-shadow: 0 8px 20px rgba(255, 79, 145, 0.35);
+      box-shadow: 0 8px 20px rgba(255,79,145,.35);
     }
 
     #thinkBtn {
@@ -150,7 +147,7 @@
       display: none;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
 
     .result.show {
@@ -165,7 +162,7 @@
     .result p {
       font-size: 16px;
       color: #495057;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
     .hidden {
@@ -179,7 +176,7 @@
     .small {
       font-size: 13px;
       color: #999;
-      margin-top: 10px;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -190,7 +187,7 @@
 
   <div class="container">
 
-    <!-- ANA SAYFA -->
+    <!-- TEKLİF -->
     <div id="proposal">
 
       <div class="heart-icon">❤️</div>
@@ -200,9 +197,9 @@
       <p class="subtitle">
         Sana bir süredir söylemek istediğim bir şey var...<br><br>
 
-        Seninle konuştuğumda nedense hep yüzümde bir gülümseme oluyor.
-        Zaman geçtikçe seni daha farklı ve daha özel görmeye başladığımı fark ettim.
-        Bunu içimde tutmak yerine sana söylemek istedim.<br><br>
+        Seninle konuştuğumda kendimi daha mutlu hissediyorum.
+        Zaman geçtikçe seni daha farklı ve daha özel görmeye başladım.
+        Bunu artık içimde tutmak istemedim.<br><br>
 
         <span class="highlight">Benimle çıkar mısın?</span>
       </p>
@@ -235,28 +232,27 @@
 
       <div class="heart-icon">💖</div>
 
-      <h2>Gerçekten mi? ❤️</h2>
+      <h2>O zaman hoş geldin hayatıma ❤️</h2>
 
       <p>
-        Bunu görmek yüzümü bayağı güldürdü.
-        <br>
-        İyi ki "Evet" dedin. 🥹
+        Bunu söylemek için biraz cesaret toplamam gerekti.<br><br>
+        Cevabını böyle görmek gerçekten çok güzel.<br>
+        Bundan sonrası artık ikimizin hikayesi olsun. 🫶
       </p>
 
     </div>
 
 
-    <!-- DÜŞÜNECEĞİM -->
+    <!-- DÜŞÜNME -->
     <div class="result" id="resultThink">
 
       <div class="heart-icon">🙈</div>
 
-      <h2>Tabii ki...</h2>
+      <h2>Acele etme ❤️</h2>
 
       <p>
-        Acele etmene gerek yok.
-        <br>
-        Düşün, ben cevabını beklerim. ❤️
+        Tabii ki, istediğin kadar düşün.<br><br>
+        Ne hissediyorsan onu dürüstçe söylemen benim için yeterli.
       </p>
 
     </div>
@@ -267,12 +263,11 @@
 
       <div class="heart-icon">💔</div>
 
-      <h2>Üzüldüm...</h2>
+      <h2>Canın sağ olsun ❤️</h2>
 
       <p>
-        Yine de dürüst olduğun için teşekkür ederim.
-        <br>
-        Cevabın bana ulaştı. ❤️
+        Yine de bunu sana söylemiş olmaktan pişman değilim.<br><br>
+        Dürüst olduğun için teşekkür ederim.
       </p>
 
     </div>
@@ -280,7 +275,7 @@
   </div>
 
 
-  <!-- FORM -->
+  <!-- FORMSPREE -->
   <form id="answerForm" method="POST">
 
     <input type="hidden" name="cevap" id="cevapInput">
@@ -302,19 +297,12 @@
 
   <script>
 
-    // ==========================================
-    // FORMSPREE
-    // BUNA DOKUNMADIM KRAL
-    // ==========================================
-
+    // FORMSPREE ADRESİN AYNI
     const FORMSPREE_URL =
       "https://formspree.io/f/xvkgello";
 
 
-    // ==========================================
     // UÇUŞAN KALPLER
-    // ==========================================
-
     const heartsContainer =
       document.getElementById("hearts");
 
@@ -323,7 +311,6 @@
       const heart = document.createElement("div");
 
       heart.className = "heart";
-
       heart.innerHTML = "❤️";
 
       heart.style.left =
@@ -345,10 +332,7 @@
     }
 
 
-    // ==========================================
     // ELEMENTLER
-    // ==========================================
-
     const yesBtn =
       document.getElementById("yesBtn");
 
@@ -370,43 +354,11 @@
     const resultNo =
       document.getElementById("resultNo");
 
-    const form =
-      document.getElementById("answerForm");
-
     const cevapInput =
       document.getElementById("cevapInput");
 
 
-    // ==========================================
-    // HAYIR BUTONU BİRAZ KAÇIYOR
-    // ==========================================
-
-    noBtn.addEventListener("mouseover", () => {
-
-      const x =
-        (Math.random() - 0.5) * 120;
-
-      const y =
-        (Math.random() - 0.5) * 80;
-
-      noBtn.style.transform =
-        `translate(${x}px, ${y}px)`;
-
-    });
-
-
-    noBtn.addEventListener("mouseleave", () => {
-
-      noBtn.style.transform =
-        "translate(0, 0)";
-
-    });
-
-
-    // ==========================================
-    // SONUÇ GÖSTER
-    // ==========================================
-
+    // SONUCU HEMEN GÖSTER
     function showResult(cevap) {
 
       proposal.classList.add("hidden");
@@ -418,7 +370,7 @@
         confetti({
           particleCount: 180,
           spread: 90,
-          origin: { y: 0.6 }
+          origin: { y: .6 }
         });
 
         setTimeout(() => {
@@ -452,91 +404,63 @@
         resultNo.classList.add("show");
 
       }
-
     }
 
 
-    // ==========================================
-    // E-POSTA GÖNDER
-    // ==========================================
-
+    // E-POSTAYI ARKA PLANDA GÖNDER
     function sendAnswer(cevap) {
 
       cevapInput.value = cevap;
 
-      form.action = FORMSPREE_URL;
-
       const formData =
-        new FormData(form);
+        new FormData(document.getElementById("answerForm"));
 
       fetch(FORMSPREE_URL, {
-
         method: "POST",
-
         body: formData,
-
         headers: {
           "Accept": "application/json"
         }
-
-      })
-
-      .then(response => {
-
-        // E-posta gönderilmiş olsun veya
-        // Formspree cevap vermese bile
-        // sayfa sonucu gösterecek.
-
-        showResult(cevap);
-
-      })
-
-      .catch(() => {
-
-        showResult(cevap);
-
+      }).catch(() => {
+        // Sayfanın çalışmasını etkilemesin.
       });
-
     }
 
 
-    // ==========================================
-    // BUTONLAR
-    // ==========================================
+    // TEK TIKLAMA SİSTEMİ
+    let answered = false;
+
+    function answer(cevap) {
+
+      if (answered) return;
+
+      answered = true;
+
+      yesBtn.disabled = true;
+      thinkBtn.disabled = true;
+      noBtn.disabled = true;
+
+      // ÖNCE SONUCU GÖSTER
+      showResult(cevap);
+
+      // SONRA E-POSTAYI GÖNDER
+      sendAnswer(cevap);
+    }
+
 
     yesBtn.addEventListener("click", () => {
-
-      yesBtn.disabled = true;
-      thinkBtn.disabled = true;
-      noBtn.disabled = true;
-
-      sendAnswer("Evet");
-
+      answer("Evet");
     });
-
 
     thinkBtn.addEventListener("click", () => {
-
-      yesBtn.disabled = true;
-      thinkBtn.disabled = true;
-      noBtn.disabled = true;
-
-      sendAnswer("Biraz düşünmem lazım");
-
+      answer("Biraz düşünmem lazım");
     });
 
-
     noBtn.addEventListener("click", () => {
-
-      yesBtn.disabled = true;
-      thinkBtn.disabled = true;
-      noBtn.disabled = true;
-
-      sendAnswer("Hayır");
-
+      answer("Hayır");
     });
 
   </script>
 
 </body>
-  </html>
+</html>
