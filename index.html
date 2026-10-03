@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nisanur ❤️</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef, #ffd6e7);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .heart {
+      position: absolute;
+      color: rgba(255, 105, 180, 0.4);
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.4;
+      }
+
+      50% {
+        transform: translateY(-30px) rotate(10deg);
+        opacity: 0.8;
+      }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 38px 28px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+      position: relative;
+      z-index: 10;
+      animation: appear 0.8s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: scale(0.85);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .heart-icon {
+      font-size: 64px;
+      margin-bottom: 15px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.12);
+      }
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #d63384;
+      margin-bottom: 18px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .highlight {
+      color: #d63384;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      padding: 14px 25px;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 85%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #ff4f91, #ff7b54);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 79, 145, 0.35);
+    }
+
+    #thinkBtn {
+      background: #fff0f6;
+      color: #d63384;
+      border: 2px solid #ffb3d1;
+    }
+
+    #noBtn {
+      background: #f1f3f5;
+      color: #868e96;
+    }
+
+    .result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .result.show {
+      display: flex;
+    }
+
+    .result h2 {
+      font-size: 27px;
+      color: #d63384;
+    }
+
+    .result p {
+      font-size: 16px;
+      color: #495057;
+      line-height: 1.6;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #answerForm {
+      display: none;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #999;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="hearts"></div>
+
+  <div class="container">
+
+    <!-- ANA SAYFA -->
+    <div id="proposal">
+
+      <div class="heart-icon">❤️</div>
+
+      <h1>Nisanur</h1>
+
+      <p class="subtitle">
+        Sana bir süredir söylemek istediğim bir şey var...<br><br>
+
+        Seninle konuştuğumda nedense hep yüzümde bir gülümseme oluyor.
+        Zaman geçtikçe seni daha farklı ve daha özel görmeye başladığımı fark ettim.
+        Bunu içimde tutmak yerine sana söylemek istedim.<br><br>
+
+        <span class="highlight">Benimle çıkar mısın?</span>
+      </p>
+
+      <div class="buttons">
+
+        <button id="yesBtn">
+          Evet 💖
+        </button>
+
+        <button id="thinkBtn">
+          Biraz düşünmem lazım 🙈
+        </button>
+
+        <button id="noBtn">
+          Hayır 💔
+        </button>
+
+      </div>
+
+      <p class="small">
+        Cevabın bana ulaşacak ❤️
+      </p>
+
+    </div>
+
+
+    <!-- EVET -->
+    <div class="result" id="resultYes">
+
+      <div class="heart-icon">💖</div>
+
+      <h2>Gerçekten mi? ❤️</h2>
+
+      <p>
+        Bunu görmek yüzümü bayağı güldürdü.
+        <br>
+        İyi ki "Evet" dedin. 🥹
+      </p>
+
+    </div>
+
+
+    <!-- DÜŞÜNECEĞİM -->
+    <div class="result" id="resultThink">
+
+      <div class="heart-icon">🙈</div>
+
+      <h2>Tabii ki...</h2>
+
+      <p>
+        Acele etmene gerek yok.
+        <br>
+        Düşün, ben cevabını beklerim. ❤️
+      </p>
+
+    </div>
+
+
+    <!-- HAYIR -->
+    <div class="result" id="resultNo">
+
+      <div class="heart-icon">💔</div>
+
+      <h2>Üzüldüm...</h2>
+
+      <p>
+        Yine de dürüst olduğun için teşekkür ederim.
+        <br>
+        Cevabın bana ulaştı. ❤️
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- FORM -->
+  <form id="answerForm" method="POST">
+
+    <input type="hidden" name="cevap" id="cevapInput">
+
+    <input
+      type="hidden"
+      name="mesaj"
+      value="Nisanur teklif sayfasından cevap geldi"
+    >
+
+    <input
+      type="text"
+      name="_gotcha"
+      style="display:none"
+    >
+
+  </form>
+
+
+  <script>
+
+    // ==========================================
+    // FORMSPREE
+    // BUNA DOKUNMADIM KRAL
+    // ==========================================
+
+    const FORMSPREE_URL =
+      "https://formspree.io/f/xvkgello";
+
+
+    // ==========================================
+    // UÇUŞAN KALPLER
+    // ==========================================
+
+    const heartsContainer =
+      document.getElementById("hearts");
+
+    for (let i = 0; i < 18; i++) {
+
+      const heart = document.createElement("div");
+
+      heart.className = "heart";
+
+      heart.innerHTML = "❤️";
+
+      heart.style.left =
+        Math.random() * 100 + "vw";
+
+      heart.style.top =
+        Math.random() * 100 + "vh";
+
+      heart.style.fontSize =
+        (16 + Math.random() * 24) + "px";
+
+      heart.style.animationDuration =
+        (4 + Math.random() * 5) + "s";
+
+      heart.style.animationDelay =
+        Math.random() * 3 + "s";
+
+      heartsContainer.appendChild(heart);
+    }
+
+
+    // ==========================================
+    // ELEMENTLER
+    // ==========================================
+
+    const yesBtn =
+      document.getElementById("yesBtn");
+
+    const thinkBtn =
+      document.getElementById("thinkBtn");
+
+    const noBtn =
+      document.getElementById("noBtn");
+
+    const proposal =
+      document.getElementById("proposal");
+
+    const resultYes =
+      document.getElementById("resultYes");
+
+    const resultThink =
+      document.getElementById("resultThink");
+
+    const resultNo =
+      document.getElementById("resultNo");
+
+    const form =
+      document.getElementById("answerForm");
+
+    const cevapInput =
+      document.getElementById("cevapInput");
+
+
+    // ==========================================
+    // HAYIR BUTONU BİRAZ KAÇIYOR
+    // ==========================================
+
+    noBtn.addEventListener("mouseover", () => {
+
+      const x =
+        (Math.random() - 0.5) * 120;
+
+      const y =
+        (Math.random() - 0.5) * 80;
+
+      noBtn.style.transform =
+        `translate(${x}px, ${y}px)`;
+
+    });
+
+
+    noBtn.addEventListener("mouseleave", () => {
+
+      noBtn.style.transform =
+        "translate(0, 0)";
+
+    });
+
+
+    // ==========================================
+    // SONUÇ GÖSTER
+    // ==========================================
+
+    function showResult(cevap) {
+
+      proposal.classList.add("hidden");
+
+      if (cevap === "Evet") {
+
+        resultYes.classList.add("show");
+
+        confetti({
+          particleCount: 180,
+          spread: 90,
+          origin: { y: 0.6 }
+        });
+
+        setTimeout(() => {
+
+          confetti({
+            particleCount: 80,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+          });
+
+          confetti({
+            particleCount: 80,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+          });
+
+        }, 400);
+
+      }
+
+      else if (cevap === "Biraz düşünmem lazım") {
+
+        resultThink.classList.add("show");
+
+      }
+
+      else {
+
+        resultNo.classList.add("show");
+
+      }
+
+    }
+
+
+    // ==========================================
+    // E-POSTA GÖNDER
+    // ==========================================
+
+    function sendAnswer(cevap) {
+
+      cevapInput.value = cevap;
+
+      form.action = FORMSPREE_URL;
+
+      const formData =
+        new FormData(form);
+
+      fetch(FORMSPREE_URL, {
+
+        method: "POST",
+
+        body: formData,
+
+        headers: {
+          "Accept": "application/json"
+        }
+
+      })
+
+      .then(response => {
+
+        // E-posta gönderilmiş olsun veya
+        // Formspree cevap vermese bile
+        // sayfa sonucu gösterecek.
+
+        showResult(cevap);
+
+      })
+
+      .catch(() => {
+
+        showResult(cevap);
+
+      });
+
+    }
+
+
+    // ==========================================
+    // BUTONLAR
+    // ==========================================
+
+    yesBtn.addEventListener("click", () => {
+
+      yesBtn.disabled = true;
+      thinkBtn.disabled = true;
+      noBtn.disabled = true;
+
+      sendAnswer("Evet");
+
+    });
+
+
+    thinkBtn.addEventListener("click", () => {
+
+      yesBtn.disabled = true;
+      thinkBtn.disabled = true;
+      noBtn.disabled = true;
+
+      sendAnswer("Biraz düşünmem lazım");
+
+    });
+
+
+    noBtn.addEventListener("click", () => {
+
+      yesBtn.disabled = true;
+      thinkBtn.disabled = true;
+      noBtn.disabled = true;
+
+      sendAnswer("Hayır");
+
+    });
+
+  </script>
+
+</body>
+  </html>
