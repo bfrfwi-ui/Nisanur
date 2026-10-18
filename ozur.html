@@ -6,103 +6,106 @@
 <title>Nisanur ❤️</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  padding:20px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:Arial,sans-serif;
-  color:#8c1748;
-  background:linear-gradient(135deg,#ffc0d9,#fff0f6,#ffb5d0);
+* {
+  box-sizing: border-box;
 }
 
-.card{
-  width:100%;
-  max-width:440px;
-  padding:28px 22px;
-  text-align:center;
-  background:#ffffffed;
-  border-radius:28px;
-  box-shadow:0 10px 40px #d6338450;
-  animation:appear .8s ease;
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffb6d0, #fff0f6, #ffc5dc);
+  color: #a31550;
 }
 
-.heart{
-  font-size:65px;
-  animation:beat 1.2s infinite;
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: 28px 22px;
+  text-align: center;
+  background: rgba(255,255,255,.94);
+  border-radius: 28px;
+  box-shadow: 0 10px 40px #d6338440;
 }
 
-h1{color:#d81b60;font-size:32px}
-
-p{line-height:1.8;font-size:16px}
-
-button{
-  display:block;
-  width:100%;
-  padding:15px;
-  margin-top:13px;
-  border:0;
-  border-radius:25px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:transform .2s;
+.heart {
+  font-size: 65px;
+  animation: kalp 1.2s infinite;
 }
 
-button:active{transform:scale(.97)}
-
-.yes{
-  background:linear-gradient(90deg,#ff4081,#e91e63);
-  color:white;
+h1 {
+  color: #d81b60;
+  font-size: 32px;
 }
 
-.no{
-  background:#ffe0ec;
-  color:#a31550;
+p {
+  font-size: 16px;
+  line-height: 1.8;
 }
 
-.wait{
-  background:#fce4ec;
-  color:#ad1457;
+button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin-top: 13px;
+  border: none;
+  border-radius: 25px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-#answer{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:18px;
-  background:#fff0f6;
-  line-height:1.8;
-  animation:appear .4s ease;
+button:active {
+  transform: scale(.97);
 }
 
-#status{
-  font-size:14px;
-  margin-top:12px;
+.evet {
+  background: linear-gradient(90deg, #ff4081, #e91e63);
+  color: white;
 }
 
-.floating{
-  position:fixed;
-  bottom:-40px;
-  pointer-events:none;
-  animation:floatUp 8s linear forwards;
+.hayir, .dusun {
+  background: #ffe0ec;
+  color: #a31550;
 }
 
-@keyframes beat{
-  50%{transform:scale(1.15)}
+#cevap {
+  display: none;
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #fff0f6;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
-@keyframes appear{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
+#durum {
+  font-size: 13px;
+  color: #a31550;
 }
 
-@keyframes floatUp{
-  to{transform:translateY(-110vh) rotate(25deg);opacity:0}
+.ucan {
+  position: fixed;
+  bottom: -35px;
+  pointer-events: none;
+  animation: uc 7s linear forwards;
+}
+
+@keyframes kalp {
+  50% { transform: scale(1.15); }
+}
+
+@keyframes uc {
+  to {
+    transform: translateY(-110vh) rotate(30deg);
+    opacity: 0;
+  }
 }
 </style>
 </head>
@@ -110,6 +113,7 @@ button:active{transform:scale(.97)}
 <body>
 
 <main class="card">
+
   <div class="heart">💗</div>
 
   <h1>Nisanur'um ❤️</h1>
@@ -125,110 +129,115 @@ button:active{transform:scale(.97)}
     Benim için çok değerlisin ve gönlünü almak istiyorum.
   </p>
 
-  <p>
-    Bana bir cevap verir misin? ❤️
-  </p>
+  <p>Bana bir cevap verir misin? ❤️</p>
 
-  <button class="yes" onclick="sendAnswer('Evet')">
+  <button type="button" class="evet" id="evet">
     ❤️ Evet
   </button>
 
-  <button class="no" onclick="sendAnswer('Hayır')">
+  <button type="button" class="hayir" id="hayir">
     💔 Hayır
   </button>
 
-  <button class="wait" onclick="sendAnswer('Biraz düşünmem lazım')">
+  <button type="button" class="dusun" id="dusun">
     🥺 Biraz düşünmem lazım
   </button>
 
-  <div id="answer"></div>
-  <div id="status"></div>
+  <div id="cevap" aria-live="polite"></div>
+  <p id="durum"></p>
 
   <p style="font-size:13px;color:#bd6689">
     Senin için hazırladım Nisanur ❤️
   </p>
+
 </main>
 
-<script type="module">
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<script>
+(function () {
+  "use strict";
 
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  const cevapAlani = document.getElementById("cevap");
+  const durumAlani = document.getElementById("durum");
 
-/*
-  BURAYA ESKİ TEKLİF SİTENDEKİ
-  AYNI FIREBASE CONFIG BİLGİLERİNİ KOY.
-*/
-const firebaseConfig = {
-  apiKey: "ESKI_PROJENIN_API_KEY",
-  authDomain: "ESKI_PROJENIN_AUTH_DOMAIN",
-  databaseURL: "ESKI_PROJENIN_DATABASE_URL",
-  projectId: "ESKI_PROJENIN_PROJECT_ID",
-  storageBucket: "ESKI_PROJENIN_STORAGE_BUCKET",
-  messagingSenderId: "ESKI_PROJENIN_SENDER_ID",
-  appId: "ESKI_PROJENIN_APP_ID"
-};
+  const cevaplar = {
+    evet: {
+      secim: "Evet",
+      mesaj:
+        "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. " +
+        "Seni kırdığım için özür dilerim. " +
+        "Seninle konuşup aramızı düzeltmek istiyorum. 💗"
+    },
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    hayir: {
+      secim: "Hayır",
+      mesaj:
+        "Nisanur, kararına saygı duyuyorum. 🤍 " +
+        "Seni zorlamak istemiyorum. " +
+        "Seni kırdığım için gerçekten özür dilerim."
+    },
 
-const cevaplar = {
-  "Evet": "Beni dinlediğin için teşekkür ederim güzelim ❤️ Seni kırdığım için özür dilerim. Seninle konuşup aramızı düzeltmek istiyorum.",
-  "Hayır": "Kararına saygı duyuyorum Nisanur. Seni zorlamak istemiyorum. Yine de seni kırdığım için özür dilerim. 🤍",
-  "Biraz düşünmem lazım": "Tabii ki güzelim. Sana zaman vereceğim. Hemen karar vermek zorunda değilsin. Hazır olduğunda konuşabiliriz. ❤️"
-};
+    dusun: {
+      secim: "Biraz düşünmem lazım",
+      mesaj:
+        "Tabii ki güzelim ❤️ Sana zaman vereceğim. " +
+        "Hemen karar vermek zorunda değilsin. " +
+        "Hazır olduğunda konuşabiliriz."
+    }
+  };
 
-window.sendAnswer = async function(choice) {
-  const answer = document.getElementById("answer");
-  const status = document.getElementById("status");
+  function secimYap(tur) {
+    const veri = cevaplar[tur];
 
-  answer.style.display = "block";
-  answer.textContent = cevaplar[choice];
-  status.textContent = "Cevabın kaydediliyor...";
+    if (!veri) return;
 
-  document.querySelectorAll("button").forEach(button => {
-    button.disabled = true;
+    // Cevabı Firebase'den bağımsız olarak hemen göster.
+    cevapAlani.textContent = veri.mesaj;
+    cevapAlani.style.display = "block";
+
+    // Sayfada hangi seçimin yapıldığını göster.
+    durumAlani.textContent = "Seçimin: " + veri.secim;
+
+    cevapAlani.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+
+    // Firebase kaydı ayrıca eklenebilir.
+    // Firebase yapılandırması olmadan butonlar yine çalışır.
+  }
+
+  document.getElementById("evet").addEventListener("click", function () {
+    secimYap("evet");
   });
 
-  try {
-    const responseRef = push(ref(db, "ozurCevaplari"));
+  document.getElementById("hayir").addEventListener("click", function () {
+    secimYap("hayir");
+  });
 
-    await set(responseRef, {
-      cevap: choice,
-      zaman: serverTimestamp()
-    });
+  document.getElementById("dusun").addEventListener("click", function () {
+    secimYap("dusun");
+  });
 
-    status.textContent = "Cevabın kaydedildi ❤️";
-  } catch (error) {
-    console.error(error);
-    status.textContent =
-      "Cevap kaydedilemedi. Lütfen daha sonra tekrar dene.";
+  // Uçuşan kalpler
+  setInterval(function () {
+    const kalp = document.createElement("span");
 
-    document.querySelectorAll("button").forEach(button => {
-      button.disabled = false;
-    });
-  }
-};
+    kalp.className = "ucan";
+    kalp.textContent = ["💗", "💕", "❤️", "♡"][
+      Math.floor(Math.random() * 4)
+    ];
 
-setInterval(() => {
-  const heart = document.createElement("span");
-  heart.className = "floating";
-  heart.textContent = ["💗","💕","❤️","♡"][
-    Math.floor(Math.random() * 4)
-  ];
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (18 + Math.random() * 20) + "px";
+    kalp.style.left = Math.random() * 100 + "vw";
+    kalp.style.fontSize = (18 + Math.random() * 20) + "px";
 
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 8000);
-}, 800);
+    document.body.appendChild(kalp);
+
+    setTimeout(function () {
+      kalp.remove();
+    }, 7000);
+  }, 800);
+
+})();
 </script>
 
 </body>
