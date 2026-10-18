@@ -3,132 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ff7eae">
+<meta name="theme-color" content="#ffb6d0">
 <title>Nisanur ❤️</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#ffb6d0,#fff0f6,#ffc5dc);
+  color:#a31550;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ffb6d0, #fff0f6, #ffc5dc);
-  color: #9c174f;
-  overflow-x: hidden;
+.card{
+  width:100%;
+  max-width:440px;
+  padding:28px 22px;
+  text-align:center;
+  background:rgba(255,255,255,.95);
+  border-radius:28px;
+  box-shadow:0 10px 40px #d6338440;
+  position:relative;
+  z-index:2;
 }
 
-.card {
-  width: 100%;
-  max-width: 440px;
-  padding: 28px 22px;
-  text-align: center;
-  background: rgba(255,255,255,.95);
-  border-radius: 28px;
-  box-shadow: 0 10px 40px #d6338440;
-  position: relative;
-  z-index: 2;
-  animation: appear .8s ease;
+.heart{
+  font-size:65px;
+  animation:beat 1.2s infinite;
 }
 
-.heart {
-  font-size: 65px;
-  animation: beat 1.2s infinite;
+h1{color:#d81b60;font-size:31px}
+p{font-size:16px;line-height:1.8}
+
+.message{
+  padding:15px;
+  border-radius:18px;
+  background:#fff0f6;
+  margin:20px 0;
 }
 
-h1 {
-  color: #d81b60;
-  font-size: 31px;
+button{
+  display:block;
+  width:100%;
+  padding:15px;
+  margin-top:13px;
+  border:0;
+  border-radius:25px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  touch-action:manipulation;
 }
 
-p {
-  font-size: 16px;
-  line-height: 1.8;
+button:active{transform:scale(.97)}
+button:disabled{opacity:.6}
+
+.yes{
+  color:white;
+  background:linear-gradient(90deg,#ff4081,#e91e63);
 }
 
-.message {
-  padding: 15px;
-  border-radius: 18px;
-  background: #fff0f6;
-  margin: 20px 0;
+.no,.think{
+  color:#a31550;
+  background:#ffe0ec;
 }
 
-button {
-  display: block;
-  width: 100%;
-  padding: 15px;
-  margin-top: 13px;
-  border: none;
-  border-radius: 25px;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: transform .2s;
+#answer{
+  display:none;
+  margin-top:22px;
+  padding:18px;
+  border-radius:18px;
+  background:#fff0f6;
+  line-height:1.8;
+  overflow-wrap:anywhere;
 }
 
-button:active {
-  transform: scale(.97);
+#status{
+  font-size:13px;
+  overflow-wrap:anywhere;
 }
 
-button:disabled {
-  opacity: .7;
-  cursor: wait;
+.floating{
+  position:fixed;
+  bottom:-40px;
+  pointer-events:none;
+  z-index:1;
+  animation:floatUp 7s linear forwards;
 }
 
-.yes {
-  color: white;
-  background: linear-gradient(90deg, #ff4081, #e91e63);
+@keyframes beat{
+  50%{transform:scale(1.15)}
 }
 
-.no, .think {
-  color: #a31550;
-  background: #ffe0ec;
-}
-
-#answer {
-  display: none;
-  margin-top: 22px;
-  padding: 18px;
-  border-radius: 18px;
-  background: #fff0f6;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-  animation: appear .4s ease;
-}
-
-#status {
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.floating {
-  position: fixed;
-  bottom: -40px;
-  pointer-events: none;
-  z-index: 1;
-  animation: floatUp 7s linear forwards;
-}
-
-@keyframes beat {
-  50% { transform: scale(1.15); }
-}
-
-@keyframes appear {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes floatUp {
-  to {
-    transform: translateY(-110vh) rotate(30deg);
-    opacity: 0;
+@keyframes floatUp{
+  to{
+    transform:translateY(-110vh) rotate(30deg);
+    opacity:0;
   }
 }
 </style>
@@ -183,181 +159,135 @@ button:disabled {
 
 </main>
 
-<script type="module">
-/*
-  FIREBASE KURULUMU:
-  Aşağıdaki Firebase yapılandırmasını kendi
-  Nisanur Teklif projenin bilgileriyle doldur.
-  
-  Bilgiler girilmeden de butonlar çalışır.
-*/
+<script>
+const DATABASE_URL =
+  "https://ozorsite-default-rtdb.firebaseio.com";
 
-const firebaseConfig = {
-  apiKey: "FIREBASE_API_KEY",
-  authDomain: "FIREBASE_AUTH_DOMAIN",
-  databaseURL: "FIREBASE_DATABASE_URL",
-  projectId: "FIREBASE_PROJECT_ID",
-  storageBucket: "FIREBASE_STORAGE_BUCKET",
-  messagingSenderId: "FIREBASE_MESSAGING_SENDER_ID",
-  appId: "FIREBASE_APP_ID"
+const answers = {
+  yes: {
+    choice: "Evet",
+    message:
+      "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. " +
+      "Seni kırdığım için özür dilerim. " +
+      "Seninle konuşup aramızı düzeltmek istiyorum. 💗"
+  },
+
+  no: {
+    choice: "Hayır",
+    message:
+      "Nisanur, kararına saygı duyuyorum. 🤍 " +
+      "Seni zorlamak istemiyorum. " +
+      "Seni kırdığım için gerçekten özür dilerim."
+  },
+
+  think: {
+    choice: "Biraz düşünmem lazım",
+    message:
+      "Tabii ki güzelim ❤️ Sana zaman vereceğim. " +
+      "Hemen karar vermek zorunda değilsin. " +
+      "Hazır olduğunda konuşabiliriz."
+  }
 };
 
 const answerBox = document.getElementById("answer");
 const statusBox = document.getElementById("status");
 
-const buttons = {
-  yes: document.getElementById("yes"),
-  no: document.getElementById("no"),
-  think: document.getElementById("think")
-};
+const buttons = [
+  document.getElementById("yes"),
+  document.getElementById("no"),
+  document.getElementById("think")
+];
 
-const messages = {
-  yes: {
-    choice: "Evet",
-    text: "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. Seni kırdığım için özür dilerim. Seninle konuşup aramızı düzeltmek istiyorum. 💗"
-  },
+let sending = false;
 
-  no: {
-    choice: "Hayır",
-    text: "Nisanur, kararına saygı duyuyorum. 🤍 Seni zorlamak istemiyorum. Seni kırdığım için gerçekten özür dilerim."
-  },
+async function chooseAnswer(key) {
+  if (sending) return;
 
-  think: {
-    choice: "Biraz düşünmem lazım",
-    text: "Tabii ki güzelim ❤️ Sana zaman vereceğim. Hemen karar vermek zorunda değilsin. Hazır olduğunda konuşabiliriz."
-  }
-};
+  const selected = answers[key];
+  if (!selected) return;
 
-let firebaseDatabase = null;
-let firebaseReady = false;
-
-function showAnswer(key) {
-  const selected = messages[key];
-
-  answerBox.textContent = selected.text;
+  // Mesajı Firebase'den bağımsız olarak hemen göster.
+  answerBox.textContent = selected.message;
   answerBox.style.display = "block";
 
+  statusBox.textContent = "Cevabın kaydediliyor...";
   answerBox.scrollIntoView({
     behavior: "smooth",
     block: "nearest"
   });
 
-  return selected;
-}
-
-/*
-  Butonlar Firebase bağlantısından bağımsız çalışır.
-  Önce mesaj ekranda gösterilir, sonra kayıt denenir.
-*/
-async function handleChoice(key) {
-  const selected = showAnswer(key);
-
-  Object.values(buttons).forEach(button => {
-    button.disabled = true;
-  });
-
-  statusBox.textContent = "Cevabın kaydedilmesi deneniyor...";
+  sending = true;
+  buttons.forEach(button => button.disabled = true);
 
   try {
-    if (!firebaseReady || !firebaseDatabase) {
-      statusBox.textContent =
-        "Mesaj gösterildi. Firebase ayarları henüz tamamlanmadı.";
-      return;
-    }
-
-    const { ref, push, set, serverTimestamp } =
-      await import(
-        "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
-      );
-
-    const responseRef = push(
-      ref(firebaseDatabase, "ozurCevaplari")
+    // Firebase REST API ile yeni cevap kaydı oluştur.
+    // POST mevcut kayıtların üzerine yazmaz.
+    const response = await fetch(
+      DATABASE_URL + "/ozurCevaplari.json",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          cevap: selected.choice,
+          zaman: { ".sv": "timestamp" }
+        })
+      }
     );
 
-    await set(responseRef, {
-      cevap: selected.choice,
-      zaman: serverTimestamp()
-    });
+    const result = await response.json();
 
-    statusBox.textContent = "Cevabın kaydedildi ❤️";
-
-  } catch (error) {
-    console.error("Firebase kayıt hatası:", error);
+    if (!response.ok || result.error) {
+      throw new Error(
+        result.error || "Firebase kayıt işlemi başarısız."
+      );
+    }
 
     statusBox.textContent =
-      "Mesaj gösterildi ama kayıt yapılamadı. Firebase kurallarını kontrol et.";
-
-    Object.values(buttons).forEach(button => {
-      button.disabled = false;
-    });
-  }
-}
-
-buttons.yes.addEventListener("click", () => handleChoice("yes"));
-buttons.no.addEventListener("click", () => handleChoice("no"));
-buttons.think.addEventListener("click", () => handleChoice("think"));
-
-/*
-  Firebase yapılandırması doldurulduysa bağlantıyı başlat.
-*/
-async function connectFirebase() {
-  if (
-    !firebaseConfig.apiKey ||
-    firebaseConfig.apiKey === "FIREBASE_API_KEY" ||
-    !firebaseConfig.databaseURL ||
-    firebaseConfig.databaseURL === "FIREBASE_DATABASE_URL" ||
-    !firebaseConfig.projectId ||
-    firebaseConfig.projectId === "FIREBASE_PROJECT_ID" ||
-    !firebaseConfig.appId ||
-    firebaseConfig.appId === "FIREBASE_APP_ID"
-  ) {
-    return;
-  }
-
-  try {
-    const { initializeApp, getApp } = await import(
-      "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
-    );
-
-    const { getDatabase } = await import(
-      "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
-    );
-
-    let app;
-
-    try {
-      app = getApp("NisanurOzur");
-    } catch {
-      app = initializeApp(firebaseConfig, "NisanurOzur");
-    }
-
-    firebaseDatabase = getDatabase(app);
-    firebaseReady = true;
+      "Cevabın kaydedildi ❤️";
 
   } catch (error) {
-    console.error("Firebase bağlantı hatası:", error);
+    console.error("Firebase hatası:", error);
+
+    statusBox.textContent =
+      "Cevap ekranda gösterildi ama Firebase'e kaydedilemedi. " +
+      "Veritabanı kurallarını kontrol et.";
+  } finally {
+    sending = false;
+    buttons.forEach(button => button.disabled = false);
   }
 }
 
-connectFirebase();
+document.getElementById("yes").addEventListener(
+  "click", () => chooseAnswer("yes")
+);
 
-/* Uçuşan kalpler */
+document.getElementById("no").addEventListener(
+  "click", () => chooseAnswer("no")
+);
+
+document.getElementById("think").addEventListener(
+  "click", () => chooseAnswer("think")
+);
+
+// Uçuşan kalpler
 setInterval(() => {
   const heart = document.createElement("span");
-
   heart.className = "floating";
-  heart.textContent = ["💗", "💕", "❤️", "♡", "💖"][
+
+  heart.textContent = ["💗","💕","❤️","♡","💖"][
     Math.floor(Math.random() * 5)
   ];
 
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (18 + Math.random() * 20) + "px";
+  heart.style.fontSize =
+    (18 + Math.random() * 20) + "px";
 
   document.body.appendChild(heart);
 
   setTimeout(() => heart.remove(), 7000);
 }, 700);
-
 </script>
 
 </body>
