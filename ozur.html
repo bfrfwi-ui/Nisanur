@@ -1,294 +1,286 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffb6d0">
-<title>Nisanur ❤️</title>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  padding:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#ffb6d0,#fff0f6,#ffc5dc);
-  color:#a31550;
-}
-
-.card{
-  width:100%;
-  max-width:440px;
-  padding:28px 22px;
-  text-align:center;
-  background:rgba(255,255,255,.95);
-  border-radius:28px;
-  box-shadow:0 10px 40px #d6338440;
-  position:relative;
-  z-index:2;
-}
-
-.heart{
-  font-size:65px;
-  animation:beat 1.2s infinite;
-}
-
-h1{color:#d81b60;font-size:31px}
-p{font-size:16px;line-height:1.8}
-
-.message{
-  padding:15px;
-  border-radius:18px;
-  background:#fff0f6;
-  margin:20px 0;
-}
-
-button{
-  display:block;
-  width:100%;
-  padding:15px;
-  margin-top:13px;
-  border:0;
-  border-radius:25px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-  touch-action:manipulation;
-}
-
-button:active{transform:scale(.97)}
-button:disabled{opacity:.6}
-
-.yes{
-  color:white;
-  background:linear-gradient(90deg,#ff4081,#e91e63);
-}
-
-.no,.think{
-  color:#a31550;
-  background:#ffe0ec;
-}
-
-#answer{
-  display:none;
-  margin-top:22px;
-  padding:18px;
-  border-radius:18px;
-  background:#fff0f6;
-  line-height:1.8;
-  overflow-wrap:anywhere;
-}
-
-#status{
-  font-size:13px;
-  overflow-wrap:anywhere;
-}
-
-.floating{
-  position:fixed;
-  bottom:-40px;
-  pointer-events:none;
-  z-index:1;
-  animation:floatUp 7s linear forwards;
-}
-
-@keyframes beat{
-  50%{transform:scale(1.15)}
-}
-
-@keyframes floatUp{
-  to{
-    transform:translateY(-110vh) rotate(30deg);
-    opacity:0;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<main class="card">
-
-  <div class="heart">💗</div>
-
-  <h1>Nisanur'um ❤️</h1>
-
-  <div class="message">
-    <p style="font-size:23px;font-weight:bold">
-      Özür dilerim güzelim 🥺❤️
-    </p>
-
-    <p>
-      Seni kırdığım için gerçekten üzgünüm.
-      Keşke böyle olmasaydı.
-      Seni üzmek istemezdim.
-    </p>
-
-    <p>
-      Benim için çok değerlisin.
-      Hatanın farkındayım ve gönlünü almak istiyorum.
-      Umarım beni dinlersin. ❤️
-    </p>
-  </div>
-
-  <p>Bana bir cevap verir misin güzelim? 💗</p>
-
-  <button type="button" class="yes" id="yes">
-    ❤️ Evet
-  </button>
-
-  <button type="button" class="no" id="no">
-    💔 Hayır
-  </button>
-
-  <button type="button" class="think" id="think">
-    🥺 Biraz düşünmem lazım
-  </button>
-
-  <div id="answer" aria-live="polite"></div>
-  <p id="status" role="status"></p>
-
-  <p style="font-size:13px;color:#bd6689">
-    Senin için hazırladım Nisanur ❤️
-  </p>
-
-</main>
-
-<script>
-const DATABASE_URL =
-  "https://ozorsite-default-rtdb.firebaseio.com";
-
-const answers = {
-  yes: {
-    choice: "Evet",
-    message:
-      "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. " +
-      "Seni kırdığım için özür dilerim. " +
-      "Seninle konuşup aramızı düzeltmek istiyorum. 💗"
-  },
-
-  no: {
-    choice: "Hayır",
-    message:
-      "Nisanur, kararına saygı duyuyorum. 🤍 " +
-      "Seni zorlamak istemiyorum. " +
-      "Seni kırdığım için gerçekten özür dilerim."
-  },
-
-  think: {
-    choice: "Biraz düşünmem lazım",
-    message:
-      "Tabii ki güzelim ❤️ Sana zaman vereceğim. " +
-      "Hemen karar vermek zorunda değilsin. " +
-      "Hazır olduğunda konuşabiliriz."
-  }
-};
-
-const answerBox = document.getElementById("answer");
-const statusBox = document.getElementById("status");
-
-const buttons = [
-  document.getElementById("yes"),
-  document.getElementById("no"),
-  document.getElementById("think")
-];
-
-let sending = false;
-
-async function chooseAnswer(key) {
-  if (sending) return;
-
-  const selected = answers[key];
-  if (!selected) return;
-
-  // Mesajı Firebase'den bağımsız olarak hemen göster.
-  answerBox.textContent = selected.message;
-  answerBox.style.display = "block";
-
-  statusBox.textContent = "Cevabın kaydediliyor...";
-  answerBox.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest"
-  });
-
-  sending = true;
-  buttons.forEach(button => button.disabled = true);
-
-  try {
-    // Firebase REST API ile yeni cevap kaydı oluştur.
-    // POST mevcut kayıtların üzerine yazmaz.
-    const response = await fetch(
-      DATABASE_URL + "/ozurCevaplari.json",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          cevap: selected.choice,
-          zaman: { ".sv": "timestamp" }
-        })
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok || result.error) {
-      throw new Error(
-        result.error || "Firebase kayıt işlemi başarısız."
-      );
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Özür Dilerim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    statusBox.textContent =
-      "Cevabın kaydedildi ❤️";
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-  } catch (error) {
-    console.error("Firebase hatası:", error);
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 28px;
+      padding: 50px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
 
-    statusBox.textContent =
-      "Cevap ekranda gösterildi ama Firebase'e kaydedilemedi. " +
-      "Veritabanı kurallarını kontrol et.";
-  } finally {
-    sending = false;
-    buttons.forEach(button => button.disabled = false);
-  }
-}
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,154,158,0.1) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
 
-document.getElementById("yes").addEventListener(
-  "click", () => chooseAnswer("yes")
-);
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
 
-document.getElementById("no").addEventListener(
-  "click", () => chooseAnswer("no")
-);
+    .heart {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
 
-document.getElementById("think").addEventListener(
-  "click", () => chooseAnswer("think")
-);
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+    }
 
-// Uçuşan kalpler
-setInterval(() => {
-  const heart = document.createElement("span");
-  heart.className = "floating";
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #e85a71;
+      margin-bottom: 12px;
+      position: relative;
+    }
 
-  heart.textContent = ["💗","💕","❤️","♡","💖"][
-    Math.floor(Math.random() * 5)
-  ];
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
 
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize =
-    (18 + Math.random() * 20) + "px";
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-  document.body.appendChild(heart);
+    .btn {
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
 
-  setTimeout(() => heart.remove(), 7000);
-}, 700);
-</script>
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+    }
 
+    .btn:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+      color: white;
+      box-shadow: 0 8px 20px rgba(238, 90, 90, 0.35);
+    }
+
+    .btn-yes:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(238, 90, 90, 0.45);
+    }
+
+    .btn-no {
+      background: linear-gradient(135deg, #a8a8a8, #8e8e8e);
+      color: white;
+      box-shadow: 0 8px 20px rgba(142, 142, 142, 0.3);
+    }
+
+    .btn-no:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(142, 142, 142, 0.4);
+    }
+
+    .btn-think {
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
+      color: white;
+      box-shadow: 0 8px 20px rgba(9, 132, 227, 0.35);
+    }
+
+    .btn-think:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(9, 132, 227, 0.45);
+    }
+
+    .result {
+      display: none;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    .result h2 {
+      font-size: 24px;
+      color: #e85a71;
+      margin-bottom: 12px;
+    }
+
+    .result p {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .loading {
+      display: none;
+      margin-top: 20px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 40px 25px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .heart {
+        font-size: 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Ana Ekran -->
+    <div id="main">
+      <div class="heart">💔</div>
+      <h1>Özür Dilerim...</h1>
+      <p class="subtitle">
+        Seni üzdüğüm için gerçekten çok üzgünüm.<br>
+        Lütfen beni affeder misin?
+      </p>
+
+      <div class="buttons">
+        <button class="btn btn-yes" onclick="sendAnswer('evet')">Evet, affediyorum ❤️</button>
+        <button class="btn btn-no" onclick="sendAnswer('hayir')">Hayır</button>
+        <button class="btn btn-think" onclick="sendAnswer('dusunmem_lazim')">Düşünmem lazım...</button>
+      </div>
+
+      <div class="loading" id="loading">Gönderiliyor...</div>
+    </div>
+
+    <!-- Sonuç Ekranı -->
+    <div class="result" id="result">
+      <div class="result-icon" id="resultIcon">💌</div>
+      <h2 id="resultTitle">Teşekkürler</h2>
+      <p id="resultText">Cevabın kaydedildi.</p>
+    </div>
+  </div>
+
+  <script>
+    const DB_URL = "https://ozorsite-default-rtdb.firebaseio.com/cevaplar.json";
+
+    async function sendAnswer(answer) {
+      const buttons = document.querySelectorAll('.btn');
+      const loading = document.getElementById('loading');
+      
+      buttons.forEach(btn => btn.disabled = true);
+      loading.classList.add('show');
+
+      const data = {
+        cevap: answer,
+        tarih: new Date().toISOString(),
+        timestamp: Date.now()
+      };
+
+      try {
+        await fetch(DB_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+      } catch (err) {
+        console.error("Hata:", err);
+      }
+
+      // Sonuç ekranını göster
+      document.getElementById('main').style.display = 'none';
+      const result = document.getElementById('result');
+      result.classList.add('show');
+
+      if (answer === 'evet') {
+        document.getElementById('resultIcon').textContent = '❤️';
+        document.getElementById('resultTitle').textContent = 'Teşekkür ederim!';
+        document.getElementById('resultText').textContent = 'Beni affettiğin için çok mutluyum. Seni seviyorum 💕';
+      } else if (answer === 'hayir') {
+        document.getElementById('resultIcon').textContent = '😢';
+        document.getElementById('resultTitle').textContent = 'Anlıyorum...';
+        document.getElementById('resultText').textContent = 'Üzgünüm. Seni daha fazla üzmek istemiyorum.';
+      } else {
+        document.getElementById('resultIcon').textContent = '💭';
+        document.getElementById('resultTitle').textContent = 'Tabii ki...';
+        document.getElementById('resultText').textContent = 'Acele etme. Ne zaman istersen buradayım.';
+      }
+    }
+  </script>
 </body>
 </html>
