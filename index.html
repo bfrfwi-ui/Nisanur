@@ -1,279 +1,260 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nisanur ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<title>Nisanur ❤️</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      overflow: hidden;
-      color: #fff;
-    }
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffb6d0, #ffe6f0, #ffcadf);
+    color: #a31550;
+    overflow-x: hidden;
+}
 
-    .hearts {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
+.card {
+    width: 100%;
+    max-width: 440px;
+    padding: 30px 23px;
+    text-align: center;
+    background: rgba(255,255,255,0.92);
+    border-radius: 28px;
+    box-shadow: 0 10px 40px rgba(220, 40, 110, 0.25);
+    animation: giris 1s ease;
+    position: relative;
+    z-index: 2;
+}
 
-    .heart {
-      position: absolute;
-      bottom: -50px;
-      font-size: 25px;
-      animation: float 7s linear infinite;
-      opacity: 0.7;
-    }
+.heart {
+    font-size: 65px;
+    animation: kalp 1.2s infinite;
+}
 
-    @keyframes float {
-      0% {
-        transform: translateY(0) rotate(0deg);
+h1 {
+    font-size: 30px;
+    margin: 15px 0;
+    color: #d81b60;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.mesaj {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff0f6;
+    border-radius: 18px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 13px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+.pembe {
+    color: white;
+    background: linear-gradient(90deg, #ff4081, #e91e63);
+    box-shadow: 0 5px 15px #ff408140;
+}
+
+.acik {
+    color: #a31550;
+    background: #ffe0ec;
+}
+
+#cevap {
+    display: none;
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 18px;
+    background: #fff0f6;
+    line-height: 1.9;
+    font-size: 16px;
+    animation: giris 0.5s ease;
+}
+
+.alt {
+    font-size: 13px;
+    color: #c05b86;
+    margin-top: 25px;
+}
+
+.ucan {
+    position: fixed;
+    bottom: -40px;
+    pointer-events: none;
+    z-index: 1;
+    animation: yukari linear forwards;
+}
+
+@keyframes kalp {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes giris {
+    from {
         opacity: 0;
-      }
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-      20% {
-        opacity: 0.8;
-      }
-
-      100% {
-        transform: translateY(-110vh) rotate(360deg);
+@keyframes yukari {
+    to {
+        transform: translateY(-115vh) rotate(35deg);
         opacity: 0;
-      }
     }
-
-    .card {
-      width: 90%;
-      max-width: 500px;
-      padding: 35px 25px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: 25px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
-      position: relative;
-      z-index: 2;
-    }
-
-    h1 {
-      margin-top: 0;
-      font-size: 32px;
-    }
-
-    p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 25px;
-    }
-
-    button {
-      border: none;
-      padding: 15px;
-      border-radius: 15px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.04);
-    }
-
-    #yes {
-      background: #ff4f81;
-      color: white;
-    }
-
-    #think {
-      background: white;
-      color: #ff4f81;
-    }
-
-    #no {
-      background: rgba(255, 255, 255, 0.35);
-      color: white;
-    }
-
-    #result {
-      display: none;
-      margin-top: 20px;
-    }
-
-    #result h2 {
-      font-size: 27px;
-      margin-bottom: 15px;
-    }
-
-    .result-text {
-      font-size: 18px;
-      line-height: 1.7;
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <div class="hearts">
-    <div class="heart" style="left:10%; animation-delay:0s;">❤️</div>
-    <div class="heart" style="left:25%; animation-delay:2s;">💗</div>
-    <div class="heart" style="left:45%; animation-delay:4s;">💕</div>
-    <div class="heart" style="left:65%; animation-delay:1s;">❤️</div>
-    <div class="heart" style="left:85%; animation-delay:3s;">💖</div>
-  </div>
+<div class="card">
 
-  <div class="card">
+    <div class="heart">💗</div>
 
-    <div id="question">
+    <h1>Nisanur'um ❤️</h1>
 
-      <h1>Nisanur ❤️</h1>
+    <div class="mesaj">
+        <p style="font-size:24px; font-weight:bold;">
+            Eşeklik yaptım özür dilerim 🥺❤️
+        </p>
 
-      <p>
-        Sana bir süredir söylemek istediğim bir şey var...
-      </p>
+        <p>
+            Seni kırdığım için gerçekten üzgünüm.
+            Keşke böyle yapmasaydım.
+            Bazen düşünmeden hareket edebiliyorum
+            ama bu seni kırmamı haklı çıkarmaz.
+        </p>
 
-      <p>
-        Seninle konuştuğumda kendimi daha mutlu hissediyorum.
-        Zaman geçtikçe seni daha farklı ve daha özel görmeye başladım.
-      </p>
-
-      <p>
-        Bunu artık içimde tutmak istemedim.
-      </p>
-
-      <h2>Benimle çıkar mısın?</h2>
-
-      <div class="buttons">
-        <button id="yes" onclick="answer('Evet')">
-          Evet ❤️
-        </button>
-
-        <button id="think" onclick="answer('Biraz düşünmem lazım')">
-          Biraz düşünmem lazım
-        </button>
-
-        <button id="no" onclick="answer('Hayır')">
-          Hayır
-        </button>
-      </div>
-
+        <p>
+            Sen benim için çok değerlisin güzelim.
+            Seni üzmek değil mutlu etmek istiyorum.
+            Hatanın farkındayım ve gönlünü almak istiyorum.
+        </p>
     </div>
 
-    <div id="result"></div>
+    <p>
+        Bana bir şey söylemek ister misin? 🥺
+    </p>
 
-  </div>
+    <button class="pembe" onclick="cevapGoster(1)">
+        ❤️ Seni dinliyorum
+    </button>
 
-  <script>
-    let answered = false;
+    <button class="acik" onclick="cevapGoster(2)">
+        🥺 Biraz zamana ihtiyacım var
+    </button>
 
-    function answer(choice) {
+    <button class="acik" onclick="cevapGoster(3)">
+        💗 Ben de seni seviyorum
+    </button>
 
-      if (answered) return;
+    <div id="cevap"></div>
 
-      answered = true;
+    <div class="alt">
+        Senin için hazırladım Nisanur ❤️
+    </div>
 
-      const question = document.getElementById("question");
-      const result = document.getElementById("result");
+</div>
 
-      question.style.display = "none";
-      result.style.display = "block";
+<script>
+function cevapGoster(secim) {
+    const alan = document.getElementById("cevap");
 
-      if (choice === "Evet") {
-
-        result.innerHTML = `
-          <h2>Evet dediğini görmek gerçekten çok güzel ❤️</h2>
-
-          <div class="result-text">
-            <p>
-              Bunu sana söylemek için uzun zamandır cesaret toplamaya çalışıyordum.<br>
-              Şimdi yüzümde istemsiz bir gülümseme var :)
-            </p>
-
-            <p>
-              Bundan sonrası için güzel anılar biriktirelim.
-            </p>
-          </div>
-        `;
-
-        confetti({
-          particleCount: 180,
-          spread: 100,
-          origin: { y: 0.6 }
-        });
-
-      }
-
-      else if (choice === "Biraz düşünmem lazım") {
-
-        result.innerHTML = `
-          <h2>Acele etme ❤️</h2>
-
-          <div class="result-text">
-            <p>
-              Tabii ki, istediğin kadar düşün.
-            </p>
-
-            <p>
-              Ne hissediyorsan onu dürüstçe söylemen benim için yeterli.
-            </p>
-          </div>
-        `;
-
-      }
-
-      else {
-
-        result.innerHTML = `
-          <h2>Canın sağ olsun ❤️</h2>
-
-          <div class="result-text">
-            <p>
-              Yine de bunu sana söylemiş olmaktan pişman değilim.
-            </p>
-
-            <p>
-              Dürüst olduğun için teşekkür ederim.
-            </p>
-          </div>
-        `;
-      }
-
-      // Formspree'ye cevabı arka planda gönder
-      fetch("https://formspree.io/f/xvkgello", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          cevap: choice,
-          tarih: new Date().toLocaleString("tr-TR")
-        })
-      }).catch(error => {
-        console.log("Form gönderme hatası:", error);
-      });
+    if (secim === 1) {
+        alan.innerHTML =
+        "Nisanur'um ❤️<br><br>" +
+        "Eşeklik yaptım özür dilerim. " +
+        "Seni kırdığım için pişmanım. " +
+        "Kendimi haklı çıkarmaya çalışmıyorum. " +
+        "Seni anlamak ve hatamı düzeltmek istiyorum. " +
+        "Hazır olduğunda seni dinlemeye hazırım güzelim. 💗";
     }
-  </script>
+
+    else if (secim === 2) {
+        alan.innerHTML =
+        "Tabii ki güzelim 🤍<br><br>" +
+        "Sana zaman vereceğim. " +
+        "Hemen affetmeni beklemiyorum. " +
+        "Ne zaman konuşmak istersen ben seni dinlemeye hazırım. " +
+        "Senin hislerin benim için önemli. ❤️";
+    }
+
+    else if (secim === 3) {
+        alan.innerHTML =
+        "Güzelim benim ❤️🥹<br><br>" +
+        "Seni çok önemsiyorum. " +
+        "Bazen hata yapsam da seni kırdığımda " +
+        "bunu düzeltmek için çabalamak istiyorum. " +
+        "İyi ki hayatımdasın Nisanur'um. 💗";
+    }
+
+    alan.style.display = "block";
+
+    alan.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+setInterval(function() {
+    const kalp = document.createElement("div");
+
+    kalp.className = "ucan";
+
+    const kalpler = ["💗", "💕", "❤️", "♡", "💖"];
+
+    kalp.textContent =
+        kalpler[Math.floor(Math.random() * kalpler.length)];
+
+    kalp.style.left = Math.random() * 100 + "vw";
+
+    kalp.style.fontSize =
+        (18 + Math.random() * 20) + "px";
+
+    kalp.style.animationDuration =
+        (6 + Math.random() * 5) + "s";
+
+    document.body.appendChild(kalp);
+
+    setTimeout(function() {
+        kalp.remove();
+    }, 12000);
+
+}, 700);
+</script>
 
 </body>
 </html>
