@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nisanur'a Özür</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      padding: 48px 36px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.18);
+    }
+    .heart {
+      font-size: 62px;
+      margin-bottom: 18px;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+    }
+    h1 {
+      font-size: 27px;
+      font-weight: 700;
+      color: #e85a71;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 15.5px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 38px;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+    .btn {
+      border: none;
+      padding: 15px 22px;
+      border-radius: 50px;
+      font-size: 15.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+      color: white;
+      box-shadow: 0 8px 18px rgba(238,90,90,0.35);
+    }
+    .btn-yes:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn-no {
+      background: linear-gradient(135deg, #a8a8a8, #8e8e8e);
+      color: white;
+    }
+    .btn-no:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn-think {
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
+      color: white;
+    }
+    .btn-think:hover:not(:disabled) { transform: translateY(-2px); }
+    .result { display: none; animation: fadeIn 0.5s ease; }
+    .result.show { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-icon { font-size: 68px; margin-bottom: 16px; }
+    .result h2 { font-size: 23px; color: #e85a71; margin-bottom: 10px; }
+    .result p { color: #555; font-size: 15px; line-height: 1.55; }
+    .loading { display: none; margin-top: 18px; color: #888; font-size: 14px; }
+    .loading.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="main">
+      <div class="heart">💔</div>
+      <h1>Nisanur...</h1>
+      <p class="subtitle">
+        Seni üzdüğüm için gerçekten çok üzgünüm.<br>
+        Lütfen beni affeder misin?
+      </p>
+      <div class="buttons">
+        <button class="btn btn-yes" onclick="sendAnswer('Evet, affediyorum ❤️')">Evet, affediyorum ❤️</button>
+        <button class="btn btn-no" onclick="sendAnswer('Hayır')">Hayır</button>
+        <button class="btn btn-think" onclick="sendAnswer('Düşünmem lazım...')">Düşünmem lazım...</button>
+      </div>
+      <div class="loading" id="loading">Gönderiliyor...</div>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-icon" id="resultIcon">💌</div>
+      <h2 id="resultTitle">Teşekkürler</h2>
+      <p id="resultText">Cevabın kaydedildi.</p>
+    </div>
+  </div>
+
+  <script>
+    async function sendAnswer(answer) {
+      const buttons = document.querySelectorAll('.btn');
+      const loading = document.getElementById('loading');
+      buttons.forEach(b => b.disabled = true);
+      loading.classList.add('show');
+
+      const formData = new FormData();
+      formData.append('Cevap', answer);
+      formData.append('Kime', 'Nisanur');
+      formData.append('Tarih', new Date().toLocaleString('tr-TR'));
+      formData.append('_subject', "Nisanur'dan Yeni Cevap!");
+      formData.append('_captcha', 'false');
+
+      try {
+        await fetch('https://formsubmit.co/ajax/ibobeygs04@gmail.com', {
+          method: 'POST',
+          body: formData
+        });
+      } catch (e) {}
+
+      document.getElementById('main').style.display = 'none';
+      const result = document.getElementById('result');
+      result.classList.add('show');
+
+      if (answer.includes('Evet')) {
+        document.getElementById('resultIcon').textContent = '❤️';
+        document.getElementById('resultTitle').textContent = 'Teşekkür ederim Nisanur!';
+        document.getElementById('resultText').textContent = 'Beni affettiğin için çok mutluyum. Seni seviyorum 💕';
+      } else if (answer === 'Hayır') {
+        document.getElementById('resultIcon').textContent = '😢';
+        document.getElementById('resultTitle').textContent = 'Anlıyorum Nisanur...';
+        document.getElementById('resultText').textContent = 'Üzgünüm. Seni daha fazla üzmek istemiyorum.';
+      } else {
+        document.getElementById('resultIcon').textContent = '💭';
+        document.getElementById('resultTitle').textContent = 'Tabii ki Nisanur...';
+        document.getElementById('resultText').textContent = 'Acele etme. Ne zaman istersen buradayım.';
+      }
+    }
+  </script>
+</body>
+</html>
