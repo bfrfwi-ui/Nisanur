@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ff7eae">
 <title>Nisanur ❤️</title>
 
 <style>
@@ -19,7 +20,8 @@ body {
   align-items: center;
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #ffb6d0, #fff0f6, #ffc5dc);
-  color: #a31550;
+  color: #9c174f;
+  overflow-x: hidden;
 }
 
 .card {
@@ -27,24 +29,34 @@ body {
   max-width: 440px;
   padding: 28px 22px;
   text-align: center;
-  background: rgba(255,255,255,.94);
+  background: rgba(255,255,255,.95);
   border-radius: 28px;
   box-shadow: 0 10px 40px #d6338440;
+  position: relative;
+  z-index: 2;
+  animation: appear .8s ease;
 }
 
 .heart {
   font-size: 65px;
-  animation: kalp 1.2s infinite;
+  animation: beat 1.2s infinite;
 }
 
 h1 {
   color: #d81b60;
-  font-size: 32px;
+  font-size: 31px;
 }
 
 p {
   font-size: 16px;
   line-height: 1.8;
+}
+
+.message {
+  padding: 15px;
+  border-radius: 18px;
+  background: #fff0f6;
+  margin: 20px 0;
 }
 
 button {
@@ -57,51 +69,63 @@ button {
   font-size: 17px;
   font-weight: bold;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform .2s;
 }
 
 button:active {
   transform: scale(.97);
 }
 
-.evet {
-  background: linear-gradient(90deg, #ff4081, #e91e63);
+button:disabled {
+  opacity: .7;
+  cursor: wait;
+}
+
+.yes {
   color: white;
+  background: linear-gradient(90deg, #ff4081, #e91e63);
 }
 
-.hayir, .dusun {
-  background: #ffe0ec;
+.no, .think {
   color: #a31550;
+  background: #ffe0ec;
 }
 
-#cevap {
+#answer {
   display: none;
   margin-top: 22px;
   padding: 18px;
   border-radius: 18px;
   background: #fff0f6;
-  font-size: 16px;
   line-height: 1.8;
+  overflow-wrap: anywhere;
+  animation: appear .4s ease;
+}
+
+#status {
+  font-size: 13px;
   overflow-wrap: anywhere;
 }
 
-#durum {
-  font-size: 13px;
-  color: #a31550;
-}
-
-.ucan {
+.floating {
   position: fixed;
-  bottom: -35px;
+  bottom: -40px;
   pointer-events: none;
-  animation: uc 7s linear forwards;
+  z-index: 1;
+  animation: floatUp 7s linear forwards;
 }
 
-@keyframes kalp {
+@keyframes beat {
   50% { transform: scale(1.15); }
 }
 
-@keyframes uc {
+@keyframes appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
   to {
     transform: translateY(-110vh) rotate(30deg);
     opacity: 0;
@@ -118,33 +142,40 @@ button:active {
 
   <h1>Nisanur'um ❤️</h1>
 
-  <p style="font-size:23px;font-weight:bold">
-    Özür dilerim güzelim 🥺
-  </p>
+  <div class="message">
+    <p style="font-size:23px;font-weight:bold">
+      Özür dilerim güzelim 🥺❤️
+    </p>
 
-  <p>
-    Seni kırdığım için gerçekten üzgünüm.
-    Keşke böyle olmasaydı.
-    Seni üzmek istemezdim.
-    Benim için çok değerlisin ve gönlünü almak istiyorum.
-  </p>
+    <p>
+      Seni kırdığım için gerçekten üzgünüm.
+      Keşke böyle olmasaydı.
+      Seni üzmek istemezdim.
+    </p>
 
-  <p>Bana bir cevap verir misin? ❤️</p>
+    <p>
+      Benim için çok değerlisin.
+      Hatanın farkındayım ve gönlünü almak istiyorum.
+      Umarım beni dinlersin. ❤️
+    </p>
+  </div>
 
-  <button type="button" class="evet" id="evet">
+  <p>Bana bir cevap verir misin güzelim? 💗</p>
+
+  <button type="button" class="yes" id="yes">
     ❤️ Evet
   </button>
 
-  <button type="button" class="hayir" id="hayir">
+  <button type="button" class="no" id="no">
     💔 Hayır
   </button>
 
-  <button type="button" class="dusun" id="dusun">
+  <button type="button" class="think" id="think">
     🥺 Biraz düşünmem lazım
   </button>
 
-  <div id="cevap" aria-live="polite"></div>
-  <p id="durum"></p>
+  <div id="answer" aria-live="polite"></div>
+  <p id="status" role="status"></p>
 
   <p style="font-size:13px;color:#bd6689">
     Senin için hazırladım Nisanur ❤️
@@ -152,92 +183,181 @@ button:active {
 
 </main>
 
-<script>
-(function () {
-  "use strict";
+<script type="module">
+/*
+  FIREBASE KURULUMU:
+  Aşağıdaki Firebase yapılandırmasını kendi
+  Nisanur Teklif projenin bilgileriyle doldur.
+  
+  Bilgiler girilmeden de butonlar çalışır.
+*/
 
-  const cevapAlani = document.getElementById("cevap");
-  const durumAlani = document.getElementById("durum");
+const firebaseConfig = {
+  apiKey: "FIREBASE_API_KEY",
+  authDomain: "FIREBASE_AUTH_DOMAIN",
+  databaseURL: "FIREBASE_DATABASE_URL",
+  projectId: "FIREBASE_PROJECT_ID",
+  storageBucket: "FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "FIREBASE_MESSAGING_SENDER_ID",
+  appId: "FIREBASE_APP_ID"
+};
 
-  const cevaplar = {
-    evet: {
-      secim: "Evet",
-      mesaj:
-        "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. " +
-        "Seni kırdığım için özür dilerim. " +
-        "Seninle konuşup aramızı düzeltmek istiyorum. 💗"
-    },
+const answerBox = document.getElementById("answer");
+const statusBox = document.getElementById("status");
 
-    hayir: {
-      secim: "Hayır",
-      mesaj:
-        "Nisanur, kararına saygı duyuyorum. 🤍 " +
-        "Seni zorlamak istemiyorum. " +
-        "Seni kırdığım için gerçekten özür dilerim."
-    },
+const buttons = {
+  yes: document.getElementById("yes"),
+  no: document.getElementById("no"),
+  think: document.getElementById("think")
+};
 
-    dusun: {
-      secim: "Biraz düşünmem lazım",
-      mesaj:
-        "Tabii ki güzelim ❤️ Sana zaman vereceğim. " +
-        "Hemen karar vermek zorunda değilsin. " +
-        "Hazır olduğunda konuşabiliriz."
+const messages = {
+  yes: {
+    choice: "Evet",
+    text: "Nisanur'um ❤️ Beni dinlediğin için teşekkür ederim. Seni kırdığım için özür dilerim. Seninle konuşup aramızı düzeltmek istiyorum. 💗"
+  },
+
+  no: {
+    choice: "Hayır",
+    text: "Nisanur, kararına saygı duyuyorum. 🤍 Seni zorlamak istemiyorum. Seni kırdığım için gerçekten özür dilerim."
+  },
+
+  think: {
+    choice: "Biraz düşünmem lazım",
+    text: "Tabii ki güzelim ❤️ Sana zaman vereceğim. Hemen karar vermek zorunda değilsin. Hazır olduğunda konuşabiliriz."
+  }
+};
+
+let firebaseDatabase = null;
+let firebaseReady = false;
+
+function showAnswer(key) {
+  const selected = messages[key];
+
+  answerBox.textContent = selected.text;
+  answerBox.style.display = "block";
+
+  answerBox.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+
+  return selected;
+}
+
+/*
+  Butonlar Firebase bağlantısından bağımsız çalışır.
+  Önce mesaj ekranda gösterilir, sonra kayıt denenir.
+*/
+async function handleChoice(key) {
+  const selected = showAnswer(key);
+
+  Object.values(buttons).forEach(button => {
+    button.disabled = true;
+  });
+
+  statusBox.textContent = "Cevabın kaydedilmesi deneniyor...";
+
+  try {
+    if (!firebaseReady || !firebaseDatabase) {
+      statusBox.textContent =
+        "Mesaj gösterildi. Firebase ayarları henüz tamamlanmadı.";
+      return;
     }
-  };
 
-  function secimYap(tur) {
-    const veri = cevaplar[tur];
+    const { ref, push, set, serverTimestamp } =
+      await import(
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
+      );
 
-    if (!veri) return;
+    const responseRef = push(
+      ref(firebaseDatabase, "ozurCevaplari")
+    );
 
-    // Cevabı Firebase'den bağımsız olarak hemen göster.
-    cevapAlani.textContent = veri.mesaj;
-    cevapAlani.style.display = "block";
-
-    // Sayfada hangi seçimin yapıldığını göster.
-    durumAlani.textContent = "Seçimin: " + veri.secim;
-
-    cevapAlani.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest"
+    await set(responseRef, {
+      cevap: selected.choice,
+      zaman: serverTimestamp()
     });
 
-    // Firebase kaydı ayrıca eklenebilir.
-    // Firebase yapılandırması olmadan butonlar yine çalışır.
+    statusBox.textContent = "Cevabın kaydedildi ❤️";
+
+  } catch (error) {
+    console.error("Firebase kayıt hatası:", error);
+
+    statusBox.textContent =
+      "Mesaj gösterildi ama kayıt yapılamadı. Firebase kurallarını kontrol et.";
+
+    Object.values(buttons).forEach(button => {
+      button.disabled = false;
+    });
+  }
+}
+
+buttons.yes.addEventListener("click", () => handleChoice("yes"));
+buttons.no.addEventListener("click", () => handleChoice("no"));
+buttons.think.addEventListener("click", () => handleChoice("think"));
+
+/*
+  Firebase yapılandırması doldurulduysa bağlantıyı başlat.
+*/
+async function connectFirebase() {
+  if (
+    !firebaseConfig.apiKey ||
+    firebaseConfig.apiKey === "FIREBASE_API_KEY" ||
+    !firebaseConfig.databaseURL ||
+    firebaseConfig.databaseURL === "FIREBASE_DATABASE_URL" ||
+    !firebaseConfig.projectId ||
+    firebaseConfig.projectId === "FIREBASE_PROJECT_ID" ||
+    !firebaseConfig.appId ||
+    firebaseConfig.appId === "FIREBASE_APP_ID"
+  ) {
+    return;
   }
 
-  document.getElementById("evet").addEventListener("click", function () {
-    secimYap("evet");
-  });
+  try {
+    const { initializeApp, getApp } = await import(
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+    );
 
-  document.getElementById("hayir").addEventListener("click", function () {
-    secimYap("hayir");
-  });
+    const { getDatabase } = await import(
+      "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
+    );
 
-  document.getElementById("dusun").addEventListener("click", function () {
-    secimYap("dusun");
-  });
+    let app;
 
-  // Uçuşan kalpler
-  setInterval(function () {
-    const kalp = document.createElement("span");
+    try {
+      app = getApp("NisanurOzur");
+    } catch {
+      app = initializeApp(firebaseConfig, "NisanurOzur");
+    }
 
-    kalp.className = "ucan";
-    kalp.textContent = ["💗", "💕", "❤️", "♡"][
-      Math.floor(Math.random() * 4)
-    ];
+    firebaseDatabase = getDatabase(app);
+    firebaseReady = true;
 
-    kalp.style.left = Math.random() * 100 + "vw";
-    kalp.style.fontSize = (18 + Math.random() * 20) + "px";
+  } catch (error) {
+    console.error("Firebase bağlantı hatası:", error);
+  }
+}
 
-    document.body.appendChild(kalp);
+connectFirebase();
 
-    setTimeout(function () {
-      kalp.remove();
-    }, 7000);
-  }, 800);
+/* Uçuşan kalpler */
+setInterval(() => {
+  const heart = document.createElement("span");
 
-})();
+  heart.className = "floating";
+  heart.textContent = ["💗", "💕", "❤️", "♡", "💖"][
+    Math.floor(Math.random() * 5)
+  ];
+
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (18 + Math.random() * 20) + "px";
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 7000);
+}, 700);
+
 </script>
 
 </body>
